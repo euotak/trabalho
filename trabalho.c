@@ -31,6 +31,8 @@ int main() {
                 printf("Digite dois números naturais entre 0 e %lld: ", (long long) 1162261466); // 3^19 - 1
                 if (scanf("%d %d", &base10_1, &base10_2) != 2 || base10_1 < 0 || base10_2 < 0) {
                     printf("Entrada inválida. Por favor, insira números naturais.\n");
+                    // Limpar o buffer de entrada para evitar loop infinito
+                    while (getchar() != '\n');
                     break;
                 }
                 ler_dados(&base10_1, &base10_2, base3_1, base3_2);  // Converte para base 3 e armazena nos arrays
