@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define MAX_DIGITS 19
+#define MAX_DIGITS 19  // máximo de dígitos
 
-void read_data(int *base10_1, int *base10_2, int base3_1[], int base3_2[]);
-void add(int base3_1[], int base3_2[], int result[]);
-void multiply(int base3_1[], int base3_2[], int result[]);
-void base10_to_base3(int base10, int base3[]);
-int base3_to_base10(int base3[]);
-void initialize_array(int array[], int size);
+// declaração das funções
+void ler_dados(int *base10_1, int *base10_2, int base3_1[], int base3_2[]);
+void somar(int base3_1[], int base3_2[], int resultado[]);
+void multiplicar(int base3_1[], int base3_2[], int resultado[]);
+void base10_para_base3(int base10, int base3[]);
+int base3_para_base10(int base3[]);
+void inicializar_array(int array[], int tamanho);
 
 int main() {
-    int option;
-    int base10_1 = 0, base10_2 = 0;
-    int base3_1[MAX_DIGITS] = {0}, base3_2[MAX_DIGITS] = {0}, result[MAX_DIGITS] = {0};
+    int opcao;
+    int base10_1 = 0, base10_2 = 0;  // vai armazenar os números em base 10
+    int base3_1[MAX_DIGITS] = {0}, base3_2[MAX_DIGITS] = {0}, resultado[MAX_DIGITS] = {0};  // Arrays para números na base 3
 
     while (true) {
         printf("Menu:\n");
@@ -21,84 +22,98 @@ int main() {
         printf("2. Somar\n");
         printf("3. Multiplicar\n");
         printf("4. Sair\n");
-        printf("Escolha uma opcao: ");
-        scanf("%d", &option);
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);  // Lê a opção do usuário
 
-        switch (option) {
+        switch (opcao) {
             case 1:
-                printf("Digite dois numeros naturais entre 0 e %lld: ", (long long) 1162261466); // 3^19 - 1
-                scanf("%d %d", &base10_1, &base10_2);
-                read_data(&base10_1, &base10_2, base3_1, base3_2);
+                // Lê dois números naturais do usuário
+                printf("Digite dois números naturais entre 0 e %lld: ", (long long) 1162261466); // 3^19 - 1
+                if (scanf("%d %d", &base10_1, &base10_2) != 2 || base10_1 < 0 || base10_2 < 0) {
+                    printf("Entrada inválida. Por favor, insira números naturais.\n");
+                    break;
+                }
+                ler_dados(&base10_1, &base10_2, base3_1, base3_2);  // Converte para base 3 e armazena nos arrays
                 break;
             case 2:
-                add(base3_1, base3_2, result);
-                printf("Resultado da soma: %d\n", base3_to_base10(result));
+                // Soma os números em base 3
+                somar(base3_1, base3_2, resultado);
+                printf("Resultado da soma: %d\n", base3_para_base10(resultado));  // Converte o resultado para base 10 e imprime
                 break;
             case 3:
-                multiply(base3_1, base3_2, result);
-                printf("Resultado da multiplicacao: %d\n", base3_to_base10(result));
+                // Multiplica os números em base 3
+                multiplicar(base3_1, base3_2, resultado);
+                printf("Resultado da multiplicação: %d\n", base3_para_base10(resultado));  // Converte o resultado para base 10 e imprime
                 break;
             case 4:
+                // Sai do programa
                 return 0;
             default:
-                printf("Opcao invalida!\n");
+                // Opção inválida
+                printf("Opção inválida!\n");
         }
-        initialize_array(result, MAX_DIGITS);
+        inicializar_array(resultado, MAX_DIGITS);  // Inicializa o array de resultado para a próxima operação
     }
 }
 
-void read_data(int *base10_1, int *base10_2, int base3_1[], int base3_2[]) {
-    base10_to_base3(*base10_1, base3_1);
-    base10_to_base3(*base10_2, base3_2);
+// Função para ler dados e converter para base 3
+void ler_dados(int *base10_1, int *base10_2, int base3_1[], int base3_2[]) {
+    base10_para_base3(*base10_1, base3_1);  // Converte o primeiro número para base 3
+    base10_para_base3(*base10_2, base3_2);  // Converte o segundo número para base 3
 }
 
-void add(int base3_1[], int base3_2[], int result[]) {
-    int carry = 0;
+// Função para somar dois números em base 3
+void somar(int base3_1[], int base3_2[], int resultado[]) {
+    int carry = 0;  // Variável para armazenar o carry
     for (int i = 0; i < MAX_DIGITS; i++) {
-        int sum = base3_1[i] + base3_2[i] + carry;
-        result[i] = sum % 3;
-        carry = sum / 3;
+        int soma = base3_1[i] + base3_2[i] + carry;  // Soma os dígitos correspondentes e o carry
+        resultado[i] = soma % 3;  // Armazena o resultado no dígito atual
+        carry = soma / 3;  // Calcula o novo carry
     }
 }
 
-void multiply(int base3_1[], int base3_2[], int result[]) {
-    int temp_result[MAX_DIGITS] = {0};
+// Função para multiplicar dois números em base 3
+void multiplicar(int base3_1[], int base3_2[], int resultado[]) {
+    int resultado_temp[MAX_DIGITS] = {0};  // Array temporário para armazenar o resultado intermediário
 
     for (int i = 0; i < MAX_DIGITS; i++) {
-        if (base3_2[i] != 0) {
+        if (base3_2[i] != 0) {  // Verifica se o dígito atual de base3_2 é diferente de zero
             int carry = 0;
             for (int j = 0; j < MAX_DIGITS - i; j++) {
-                int prod = base3_1[j] * base3_2[i] + carry + temp_result[i + j];
-                temp_result[i + j] = prod % 3;
-                carry = prod / 3;
+                int produto = base3_1[j] * base3_2[i] + carry + resultado_temp[i + j];  // Multiplica os dígitos e adiciona o carry
+                resultado_temp[i + j] = produto % 3;  // Armazena o resultado no dígito correspondente
+                carry = produto / 3;  // Calcula o novo carry
             }
         }
     }
 
     for (int i = 0; i < MAX_DIGITS; i++) {
-        result[i] = temp_result[i];
+        resultado[i] = resultado_temp[i];  // Copia o resultado temporário para o resultado final
     }
 }
 
-void base10_to_base3(int base10, int base3[]) {
+// Função para converter um número da base 10 para a base 3
+void base10_para_base3(int base10, int base3[]) {
     for (int i = 0; i < MAX_DIGITS; i++) {
-        base3[i] = base10 % 3;
-        base10 /= 3;
+        base3[i] = base10 % 3;  // Calcula o dígito atual na base 3
+        base10 /= 3;  // Divide o número por 3 para calcular o próximo dígito
     }
 }
 
-int base3_to_base10(int base3[]) {
+// Função para converter um número da base 3 para a base 10
+int base3_para_base10(int base3[]) {
     int base10 = 0;
-    int power = 1;
+    int potencia = 1;
     for (int i = 0; i < MAX_DIGITS; i++) {
-        base10 += base3[i] * power;
-        power *= 3;
+        base10 += base3[i] * potencia;  // Calcula o valor do dígito atual na base 10
+        potencia *= 3;  // Multiplica a potência por 3 para o próximo dígito
     }
-    return base10;
+    return base10;  // Retorna o número convertido
 }
 
-void initialize_array(int array[], int size) {
-    for (int i = 0; i < size; i++) {
-        array[i] = 0;
+// Função para inicializar um array com zeros
+void inicializar_array(int array[], int tamanho) {
+    for (int i = 0; i < tamanho; i++) {
+        array[i] = 0;  // Inicializa cada elemento do array com zero
     }
 }
