@@ -1,19 +1,53 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define MAX_DIGITS 19  // máximo de dígitos
+#define MAX_DIGITS 19  // Máximo de dígitos
 
-// declaração das funções
-void ler_dados(int *base10_1, int *base10_2, int base3_1[], int base3_2[]);
-void somar(int base3_1[], int base3_2[], int resultado[]);
-void multiplicar(int base3_1[], int base3_2[], int resultado[]);
-void base10_para_base3(int base10, int base3[]);
-int base3_para_base10(int base3[]);
-void inicializar_array(int array[], int tamanho);
+// Declaração das funções
+// Função para ler dados e inicializar variáveis
+void ler_dados(int *base10_1, int *base10_2, int base3_1[], int base3_2[]) {
+    // Solicita ao usuário que insira dois números em base 10
+    // Converte os números inseridos para base 3 e armazena em base3_1 e base3_2
+}
+
+// Função para somar dois números representados em base 3
+void somar(int base3_1[], int base3_2[], int resultado[]) {
+    // Implementa a soma de dois números em base 3
+    // Considera o carry (retenção) e a adição em base 3
+    // Armazena o resultado da soma no array resultado
+}
+
+// Função para multiplicar dois números representados em base 3
+void multiplicar(int base3_1[], int base3_2[], int resultado[]) {
+    // Implementa a multiplicação de dois números em base 3
+    // Considera a multiplicação e a acumulação em base 3
+    // Armazena o resultado da multiplicação no array resultado
+}
+
+// Função para converter um número de base 10 para base 3
+void base10_para_base3(int base10, int base3[]) {
+    // Converte um número de base 10 para base 3
+    // Divide o número por 3 e armazena os restos no array base3
+    // Preenche o array base3 com os dígitos da base 3 do número
+}
+
+// Função para converter um número de base 3 para base 10
+int base3_para_base10(const int base3[]) {
+    // Converte um número de base 3 para base 10
+    // Reconstrói o número a partir dos valores armazenados no array base3
+    // Retorna o número convertido em base 10
+}
+
+// Função para inicializar um array com zeros
+void inicializar_array(int array[], int tamanho) {
+    // Preenche o array com zeros
+    // Utiliza um loop para definir todos os elementos como zero
+}
+
 
 int main() {
     int opcao;
-    int base10_1 = 0, base10_2 = 0;  // vai armazenar os números em base 10
+    int base10_1 = 0, base10_2 = 0;  // Armazena os números em base 10
     int base3_1[MAX_DIGITS] = {0}, base3_2[MAX_DIGITS] = {0}, resultado[MAX_DIGITS] = {0};  // Arrays para números na base 3
 
     while (true) {
@@ -22,6 +56,7 @@ int main() {
         printf("2. Somar\n");
         printf("3. Multiplicar\n");
         printf("4. Sair\n");
+        printf("5. Executar testes\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);  // Lê a opção do usuário
 
@@ -29,10 +64,9 @@ int main() {
             case 1:
                 // Lê dois números naturais do usuário
                 printf("Digite dois números naturais entre 0 e %lld: ", (long long) 1162261466); // 3^19 - 1
-                if (scanf("%d %d", &base10_1, &base10_2) != 2 || base10_1 < 0 || base10_2 < 0) {
-                    printf("Entrada inválida. Por favor, insira números naturais.\n");
-                    // Limpar o buffer de entrada para evitar loop infinito
-                    while (getchar() != '\n');
+                if (scanf("%d %d", &base10_1, &base10_2) != 2 || base10_1 < 0 || base10_1 > 1162261466 || base10_2 < 0 || base10_2 > 1162261466) {
+                    printf("Entrada inválida. Por favor, insira números naturais dentro do intervalo válido.\n");
+                    while (getchar() != '\n');  // Limpar o buffer de entrada para evitar loop infinito
                     break;
                 }
                 ler_dados(&base10_1, &base10_2, base3_1, base3_2);  // Converte para base 3 e armazena nos arrays
@@ -50,6 +84,10 @@ int main() {
             case 4:
                 // Sai do programa
                 return 0;
+            case 5:
+                // Executa testes
+                executar_testes();
+                break;
             default:
                 // Opção inválida
                 printf("Opção inválida!\n");
@@ -103,7 +141,7 @@ void base10_para_base3(int base10, int base3[]) {
 }
 
 // Função para converter um número da base 3 para a base 10
-int base3_para_base10(int base3[]) {
+int base3_para_base10(const int base3[]) {
     int base10 = 0;
     int potencia = 1;
     for (int i = 0; i < MAX_DIGITS; i++) {
